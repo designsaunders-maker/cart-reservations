@@ -208,9 +208,68 @@
 
     .loading-row td { text-align: center; padding: 50px; color: var(--text-muted); font-family: var(--mono); font-size: 0.82rem; }
 
-    @media (max-width: 700px) {
-      header { flex-direction: column; align-items: flex-start; padding: 14px 16px; }
-      main   { padding: 16px 10px; }
+    /* ── Mobile: day-picker layout ──────────────────────── */
+    @media (max-width: 720px) {
+      header { flex-direction: column; align-items: flex-start; padding: 14px 16px; gap: 10px; }
+      .week-nav { width: 100%; justify-content: space-between; }
+      .week-label { min-width: 0; flex: 1; text-align: center; }
+      main { padding: 12px 10px; }
+
+      /* Hide full desktop table */
+      .table-wrapper { display: none; }
+
+      /* Day picker */
+      .day-picker { display: flex; gap: 4px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 2px; }
+      .day-btn {
+        flex-shrink: 0; font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+        padding: 7px 12px; border-radius: 6px; border: 1.5px solid var(--border);
+        background: white; color: var(--text-muted); cursor: pointer; transition: all .15s;
+        text-align: center; min-width: 60px;
+      }
+      .day-btn .day-short { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text); }
+      .day-btn .day-num   { display: block; font-size: 0.66rem; margin-top: 1px; }
+      .day-btn.active     { background: var(--gt-tab); border-color: var(--gt-tab); color: white; }
+      .day-btn.active .day-short { color: white; }
+      .day-btn.today-day  { border-color: var(--gt-tab); }
+
+      /* Mobile slot grid */
+      .mobile-grid { display: block; }
+      .mobile-cart-headers {
+        display: grid; grid-template-columns: 80px 1fr 1fr;
+        background: var(--gt-h1); border-radius: 8px 8px 0 0; overflow: hidden;
+      }
+      .mch-cell {
+        color: rgba(255,255,255,0.92); font-size: 0.72rem; font-weight: 600;
+        letter-spacing: 0.05em; text-transform: uppercase; padding: 9px 6px;
+        text-align: center;
+      }
+      .mch-cell:first-child { text-align: left; padding-left: 12px; }
+      .mobile-row {
+        display: grid; grid-template-columns: 80px 1fr 1fr;
+        border-top: 1px solid var(--border); background: white;
+      }
+      .mobile-row:last-child { border-radius: 0 0 8px 8px; }
+      .m-period {
+        padding: 8px 4px 8px 12px; border-right: 1px solid var(--border);
+        display: flex; flex-direction: column; justify-content: center;
+      }
+      .m-period .period-name { font-size: 0.73rem; font-weight: 500; }
+      .m-period .period-time { font-family: var(--mono); font-size: 0.61rem; color: var(--text-muted); margin-top: 1px; }
+      .m-slot {
+        padding: 5px 4px; display: flex; align-items: center; justify-content: center;
+        border-left: 1px solid var(--border); min-height: 52px;
+      }
+      .m-slot .chip { width: calc(100% - 2px); font-size: 0.68rem; }
+      .mobile-wrapper {
+        background: white; border: 1px solid var(--border);
+        border-radius: 10px; overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      }
+    }
+
+    /* Hide mobile elements on desktop */
+    @media (min-width: 721px) {
+      .day-picker, .mobile-grid, .mobile-wrapper { display: none; }
     }
   </style>
 </head>
@@ -231,6 +290,13 @@
 
 <main>
   <div class="grade-tabs" id="gradeTabs"></div>
+
+  <!-- Mobile: day picker + single-day grid -->
+  <div class="day-picker" id="dayPicker"></div>
+  <div class="mobile-wrapper">
+    <div class="mobile-grid" id="mobileGrid"></div>
+  </div>
+
   <div class="table-wrapper">
     <table id="cartTable">
       <thead id="tableHead"></thead>
@@ -364,6 +430,8 @@ async function loadAndRender() {
     reservations[r.cart_name+'_'+r.reservation_date+'_'+r.period_id] = { id: r.id, reserved_by: r.reserved_by };
   });
   renderTable(dates);
+  renderDayPicker(dates);
+  renderMobileGrid(dates);
 }
 
 // ── Render table ─────────────────────────────────────────
