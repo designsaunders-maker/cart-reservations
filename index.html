@@ -6,7 +6,7 @@
   <title>Chromebook Carts — Brookwood School</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #F5F4EF;
@@ -14,10 +14,10 @@
       --header-text: #E8EDE9;
       --primary: #3D5A3E;
       --primary-hover: #2C4430;
-      --reserved: #C4773B;
+      --reserved-text: #7A4010;
       --reserved-bg: #FDF0E6;
       --reserved-border: #E8A97A;
-      --available: #4A7C59;
+      --available-text: #2E5E3A;
       --available-bg: #EDF4EF;
       --available-border: #A8CCAF;
       --surface: #FFFFFF;
@@ -36,15 +36,14 @@
       padding: 18px 32px; display: flex; align-items: center;
       justify-content: space-between; gap: 16px;
     }
-    .school-name { font-family: var(--display); font-size: 0.95rem; font-weight: 500; opacity: 0.65; }
+    .school-name { font-family: var(--display); font-size: 0.95rem; opacity: 0.65; }
     .page-title  { font-family: var(--display); font-size: 1.5rem; font-weight: 600; margin-top: 2px; }
-
-    .week-nav { display: flex; align-items: center; gap: 10px; }
-    .week-label { font-family: var(--mono); font-size: 0.82rem; opacity: 0.85; min-width: 170px; text-align: center; }
+    .week-nav    { display: flex; align-items: center; gap: 10px; }
+    .week-label  { font-family: var(--mono); font-size: 0.82rem; opacity: 0.85; min-width: 170px; text-align: center; }
     .nav-btn {
       background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
       color: var(--header-text); width: 30px; height: 30px; border-radius: 5px;
-      cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
       transition: background .15s;
     }
     .nav-btn:hover { background: rgba(255,255,255,0.2); }
@@ -55,68 +54,76 @@
     }
     .today-btn:hover { background: rgba(255,255,255,0.2); }
 
-    main { max-width: 1120px; margin: 0 auto; padding: 28px 24px; }
+    main { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
 
-    .config-warning {
-      background: #FFFBEB; border: 1px solid #F59E0B; border-radius: 8px;
-      padding: 14px 18px; margin-bottom: 20px; font-size: 0.85rem; color: #78350F;
-    }
-    .config-warning code {
-      font-family: var(--mono); background: rgba(0,0,0,0.06);
-      padding: 2px 5px; border-radius: 3px;
-    }
-
-    .cart-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid var(--border); }
-    .cart-tab {
-      font-family: var(--mono); font-size: 0.82rem; font-weight: 500; letter-spacing: 0.05em;
-      padding: 9px 20px; border: none; background: none; color: var(--text-muted);
+    .grade-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid var(--border); }
+    .grade-tab {
+      font-family: var(--sans); font-size: 0.9rem; font-weight: 500;
+      padding: 10px 24px; border: none; background: none; color: var(--text-muted);
       cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .15s;
     }
-    .cart-tab:hover { color: var(--primary); }
-    .cart-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+    .grade-tab:hover { color: var(--primary); }
+    .grade-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
 
-    .grid-wrapper {
+    .table-wrapper {
       background: var(--surface); border-radius: 10px; border: 1px solid var(--border);
-      overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      overflow: auto; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .grid-header { display: grid; grid-template-columns: 116px repeat(5, 1fr); background: var(--primary); }
-    .grid-header-cell {
-      color: rgba(255,255,255,0.9); font-size: 0.75rem; font-weight: 600;
-      letter-spacing: 0.07em; text-transform: uppercase; padding: 11px 8px; text-align: center;
-    }
-    .grid-header-cell:first-child { text-align: left; padding-left: 16px; }
-    .day-date { font-size: 0.68rem; font-weight: 400; opacity: 0.7; display: block; font-family: var(--mono); margin-top: 1px; }
-    .day-today { color: #A8F0C6; }
-    .day-today .day-date { opacity: 1; }
 
-    .grid-row { display: grid; grid-template-columns: 116px repeat(5, 1fr); border-top: 1px solid var(--border); }
-    .period-cell {
-      padding: 10px 8px 10px 16px; border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; justify-content: center;
-    }
-    .period-name { font-size: 0.77rem; font-weight: 500; }
-    .period-time { font-family: var(--mono); font-size: 0.66rem; color: var(--text-muted); margin-top: 2px; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
 
-    .slot-cell {
-      padding: 5px; border-right: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      min-height: 54px; transition: background .1s;
-    }
-    .slot-cell:last-child { border-right: none; }
-    .slot-cell.available { cursor: pointer; }
-    .slot-cell.available:hover { background: #F0F7F1; }
-    .slot-cell.has-res { cursor: pointer; }
-    .slot-cell.past { background: #FAFAF8; }
+    /* Header rows */
+    thead tr:first-child th { background: var(--primary); }
+    thead tr:last-child  th { background: #4A6B4B; }
 
-    .slot-chip {
-      width: 100%; border-radius: 5px; padding: 5px 7px; font-size: 0.71rem;
-      font-weight: 500; text-align: center; line-height: 1.3; transition: all .1s;
+    th {
+      color: rgba(255,255,255,0.92); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 6px;
+      text-align: center; white-space: nowrap;
     }
-    .chip-available { color: var(--available); background: var(--available-bg); border: 1px solid var(--available-border); }
-    .slot-cell.available:hover .chip-available { background: #D4EADB; border-color: var(--available); }
-    .chip-reserved  { color: #7A4010; background: var(--reserved-bg); border: 1px solid var(--reserved-border); }
-    .slot-cell.has-res:hover .chip-reserved { background: #FBE2CB; }
-    .chip-past      { color: #C0BDB5; background: #F4F3F0; border: 1px solid #E6E4DF; font-style: italic; }
+    th.period-header { text-align: left; padding-left: 14px; width: 108px; }
+    th.day-header { border-left: 1px solid rgba(255,255,255,0.15); }
+    th.today-header { color: #A8F0C6; }
+    .day-date { display: block; font-size: 0.65rem; font-weight: 400; opacity: 0.75; font-family: var(--mono); margin-top: 1px; }
+    th.cart-header { font-size: 0.68rem; border-left: 1px solid rgba(255,255,255,0.1); }
+    th.cart-header:nth-child(odd) { border-left: 1px solid rgba(255,255,255,0.2); }
+
+    /* Body rows */
+    tbody tr { border-top: 1px solid var(--border); }
+    tbody tr:hover { background: #FAFAF8; }
+
+    td.period-cell {
+      padding: 8px 8px 8px 14px; border-right: 1px solid var(--border);
+      vertical-align: middle; white-space: nowrap;
+    }
+    .period-name { font-size: 0.76rem; font-weight: 500; }
+    .period-time { font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted); margin-top: 1px; }
+
+    td.slot-cell {
+      padding: 4px; text-align: center; vertical-align: middle;
+      min-width: 80px; height: 52px;
+      border-left: 1px solid var(--border);
+      transition: background .1s;
+    }
+    td.slot-cell.day-start { border-left: 2px solid var(--border); }
+    td.slot-cell.past { background: #FAFAF8; }
+
+    .chip {
+      display: inline-block; width: calc(100% - 4px); border-radius: 5px;
+      padding: 5px 5px; font-size: 0.69rem; font-weight: 500;
+      text-align: center; line-height: 1.3; transition: all .1s;
+    }
+    .chip-available {
+      color: var(--available-text); background: var(--available-bg);
+      border: 1px solid var(--available-border); cursor: pointer;
+    }
+    td.slot-cell:not(.past):hover .chip-available { background: #C9E5D1; border-color: var(--primary); }
+    .chip-reserved {
+      color: var(--reserved-text); background: var(--reserved-bg);
+      border: 1px solid var(--reserved-border); cursor: pointer;
+    }
+    td.slot-cell:not(.past):hover .chip-reserved { background: #FAE0C5; }
+    .chip-past { color: #C0BDB5; background: #F4F3F0; border: 1px solid #E6E4DF; font-style: italic; font-size: 0.65rem; }
 
     /* Modals */
     .modal-overlay {
@@ -129,28 +136,22 @@
     .modal {
       background: white; border-radius: 12px; padding: 28px; max-width: 380px; width: 100%;
       box-shadow: 0 20px 60px rgba(0,0,0,0.18);
-      transform: translateY(12px); transition: transform .2s;
+      transform: translateY(10px); transition: transform .2s;
     }
     .modal-overlay.active .modal { transform: translateY(0); }
-    .modal-cart {
-      font-family: var(--mono); font-size: 0.7rem; color: var(--primary);
-      font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 4px;
-    }
-    .modal-title    { font-family: var(--display); font-size: 1.3rem; font-weight: 600; }
-    .modal-subtitle { font-family: var(--mono); font-size: 0.76rem; color: var(--text-muted); margin-bottom: 20px; margin-top: 3px; }
+    .modal-eyebrow { font-family: var(--mono); font-size: 0.68rem; color: var(--primary); font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 4px; }
+    .modal-title   { font-family: var(--display); font-size: 1.25rem; font-weight: 600; }
+    .modal-sub     { font-family: var(--mono); font-size: 0.74rem; color: var(--text-muted); margin: 4px 0 20px; }
     .modal-input {
       width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 7px;
       font-family: var(--sans); font-size: 0.9rem; color: var(--text); background: var(--bg);
       outline: none; transition: border-color .15s; margin-bottom: 14px;
     }
     .modal-input:focus { border-color: var(--primary); background: white; }
-    .modal-actions  { display: flex; gap: 8px; }
-    .btn {
-      flex: 1; padding: 10px 14px; border-radius: 7px; font-family: var(--sans);
-      font-size: 0.87rem; font-weight: 500; cursor: pointer; border: none; transition: all .15s;
-    }
+    .modal-actions { display: flex; gap: 8px; }
+    .btn { flex: 1; padding: 10px 14px; border-radius: 7px; font-family: var(--sans); font-size: 0.87rem; font-weight: 500; cursor: pointer; border: none; transition: all .15s; }
     .btn-secondary  { background: var(--bg); color: var(--text-muted); border: 1.5px solid var(--border); }
-    .btn-secondary:hover { background: var(--border); color: var(--text); }
+    .btn-secondary:hover { background: var(--border); }
     .btn-primary    { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-hover); }
     .btn-primary:disabled, .btn-danger:disabled { opacity: .5; cursor: default; }
@@ -161,7 +162,7 @@
       background: var(--reserved-bg); border: 1px solid var(--reserved-border);
       border-radius: 7px; padding: 11px 14px; margin-bottom: 16px; font-size: 0.85rem;
     }
-    .cancel-name { font-weight: 600; color: var(--reserved); }
+    .cancel-name { font-weight: 600; color: #B45309; }
 
     .toast {
       position: fixed; bottom: 22px; right: 22px; padding: 11px 18px;
@@ -173,21 +174,11 @@
     .toast.show  { opacity: 1; transform: translateY(0); }
     .toast.error { background: #DC2626; }
 
-    .loading-overlay {
-      display: flex; align-items: center; justify-content: center;
-      padding: 60px; color: var(--text-muted); font-size: 0.82rem; font-family: var(--mono);
-    }
+    .loading-row td { text-align: center; padding: 50px; color: var(--text-muted); font-family: var(--mono); font-size: 0.82rem; }
 
-    @media (max-width: 760px) {
-      header { flex-direction: column; align-items: flex-start; padding: 16px; }
-      main   { padding: 16px 12px; }
-      .grid-header, .grid-row { grid-template-columns: 84px repeat(5, 1fr); }
-      .grid-header-cell { font-size: 0.65rem; padding: 8px 3px; }
-      .grid-header-cell:first-child { padding-left: 8px; }
-      .period-cell  { padding: 8px 3px 8px 8px; }
-      .period-name  { font-size: 0.69rem; }
-      .period-time  { font-size: 0.6rem; }
-      .slot-chip    { font-size: 0.65rem; padding: 4px; }
+    @media (max-width: 700px) {
+      header { flex-direction: column; align-items: flex-start; padding: 14px 16px; }
+      main   { padding: 16px 10px; }
     }
   </style>
 </head>
@@ -207,23 +198,21 @@
 </header>
 
 <main>
-  <div id="configWarning" class="config-warning" style="display:none">
-    &#9888; <strong>Setup needed:</strong> Open <code>index.html</code> and replace
-    <code>YOUR_SUPABASE_URL</code> and <code>YOUR_SUPABASE_ANON_KEY</code>
-    in the CONFIG section near the bottom of the file.
-  </div>
-  <div class="cart-tabs" id="cartTabs"></div>
-  <div class="grid-wrapper" id="gridWrapper">
-    <div class="loading-overlay">Loading&hellip;</div>
+  <div class="grade-tabs" id="gradeTabs"></div>
+  <div class="table-wrapper">
+    <table id="cartTable">
+      <thead id="tableHead"></thead>
+      <tbody id="tableBody"><tr class="loading-row"><td colspan="11">Loading&hellip;</td></tr></tbody>
+    </table>
   </div>
 </main>
 
 <!-- Reserve modal -->
 <div class="modal-overlay" id="reserveModal">
   <div class="modal">
-    <div class="modal-cart"    id="rCartLabel"></div>
-    <div class="modal-title"   id="rDayPeriod"></div>
-    <div class="modal-subtitle" id="rTime"></div>
+    <div class="modal-eyebrow" id="rEyebrow"></div>
+    <div class="modal-title"   id="rTitle"></div>
+    <div class="modal-sub"     id="rSub"></div>
     <input class="modal-input" id="nameInput" type="text" placeholder="Your name" autocomplete="off" maxlength="80">
     <div class="modal-actions">
       <button class="btn btn-secondary" id="rCancelBtn">Cancel</button>
@@ -235,10 +224,10 @@
 <!-- Cancel modal -->
 <div class="modal-overlay" id="cancelModal">
   <div class="modal">
-    <div class="modal-cart"     id="cCartLabel"></div>
-    <div class="modal-title"    id="cDayPeriod"></div>
-    <div class="modal-subtitle" id="cTime"></div>
-    <div class="cancel-info">Reserved by <span class="cancel-name" id="cReservedBy"></span></div>
+    <div class="modal-eyebrow" id="cEyebrow"></div>
+    <div class="modal-title"   id="cTitle"></div>
+    <div class="modal-sub"     id="cSub"></div>
+    <div class="cancel-info">Reserved by <span class="cancel-name" id="cName"></span></div>
     <div class="modal-actions">
       <button class="btn btn-secondary" id="cKeepBtn">Keep it</button>
       <button class="btn btn-danger"    id="cCancelBtn">Cancel reservation</button>
@@ -249,19 +238,15 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ==========================================================
-//  CONFIGURATION
-//  Replace with your Supabase credentials:
-//  Supabase dashboard > Project Settings > API
-// ==========================================================
-const CONFIG = {
-  supabaseUrl: 'https://wouagdrnrcycqoxzgdnk.supabase.co',
-  supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvdWFnZHJucmN5Y3FveHpnZG5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTI5NTcsImV4cCI6MjA4ODEyODk1N30.cVdi4s5HcwzNmuYfB15jA8JdJfyvQBX5JYfcKbs9Mjk',
-};
+// ── Config ──────────────────────────────────────────────
+const SUPABASE_URL = 'https://wouagdrnrcycqoxzgdnk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvdWFnZHJucmN5Y3FveHpnZG5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTI5NTcsImV4cCI6MjA4ODEyODk1N30.cVdi4s5HcwzNmuYfB15jA8JdJfyvQBX5JYfcKbs9Mjk';
 
-// ==========================================================
-//  PERIOD SCHEDULE  — update to match Brookwood's actual day
-// ==========================================================
+const GROUPS = [
+  { id: '5th', label: '5th Grade', carts: ['5-1', '5-2'] },
+  { id: '6th', label: '6th Grade', carts: ['6-1', '6-2'] },
+];
+
 const PERIODS = [
   { id: 'p1', label: 'Period 1', time: '8:30\u20139:20'   },
   { id: 'p2', label: 'Period 2', time: '9:20\u201310:10'  },
@@ -271,29 +256,23 @@ const PERIODS = [
   { id: 'p6', label: 'Period 6', time: '1:40\u20132:30'   },
 ];
 
-const CARTS = ['5-1', '5-2', '6-1', '6-2'];
-const DAYS  = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
 
-// ---------- state ----------
-let db           = null;
-let activeCart   = CARTS[0];
-let weekOffset   = 0;
-let reservations = {};
-let pending      = null;
+// ── State ────────────────────────────────────────────────
+var db          = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+var activeGroup = GROUPS[0];
+var weekOffset  = 0;
+var reservations = {};  // key: `${cart}_${date}_${pid}` → { id, reserved_by }
+var pending     = null;
 
-// ---------- boot ----------
+// ── Boot ─────────────────────────────────────────────────
 function init() {
-  if (CONFIG.supabaseUrl === 'YOUR_SUPABASE_URL') {
-    document.getElementById('configWarning').style.display = 'block';
-  } else {
-    db = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey);
-  }
   renderTabs();
-  loadAndRender();
   bindEvents();
+  loadAndRender();
 }
 
-// ---------- week helpers ----------
+// ── Week helpers ─────────────────────────────────────────
 function getMondayOf(offset) {
   var d = new Date(); d.setHours(0,0,0,0);
   var day = d.getDay();
@@ -302,124 +281,135 @@ function getMondayOf(offset) {
 }
 function weekDates(offset) {
   var mon = getMondayOf(offset);
-  return Array.from({length:5}, function(_,i) {
-    var d = new Date(mon); d.setDate(d.getDate()+i); return d;
-  });
+  return Array.from({length:5}, function(_,i){ var d=new Date(mon); d.setDate(d.getDate()+i); return d; });
 }
 function fmtDate(d)  { return d.toISOString().split('T')[0]; }
 function fmtShort(d) { return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
-function isToday(d)  {
-  var t = new Date();
-  return d.getFullYear()===t.getFullYear() && d.getMonth()===t.getMonth() && d.getDate()===t.getDate();
-}
+function isToday(d)  { var t=new Date(); return d.getFullYear()===t.getFullYear()&&d.getMonth()===t.getMonth()&&d.getDate()===t.getDate(); }
 function isPast(d, pIdx) {
-  var now = new Date(), t = new Date(); t.setHours(0,0,0,0);
+  var now=new Date(), t=new Date(); t.setHours(0,0,0,0);
   if (d < t) return true;
   if (isToday(d)) {
-    var parts = PERIODS[pIdx].time.split('\u2013');
-    var end = parts[1] ? parts[1].trim() : null;
-    if (end) {
-      var hm = end.split(':').map(Number);
-      var pe = new Date(); pe.setHours(hm[0], hm[1], 0, 0);
-      if (now > pe) return true;
-    }
+    var end = PERIODS[pIdx].time.split('\u2013')[1];
+    if (end) { var hm=end.trim().split(':').map(Number); var pe=new Date(); pe.setHours(hm[0],hm[1],0,0); if(now>pe) return true; }
   }
   return false;
 }
 
-// ---------- tabs ----------
+// ── Tabs ─────────────────────────────────────────────────
 function renderTabs() {
-  var el = document.getElementById('cartTabs');
-  el.innerHTML = CARTS.map(function(c) {
-    return '<button class="cart-tab' + (c===activeCart?' active':'') + '" data-cart="'+c+'">Cart '+c+'</button>';
+  var el = document.getElementById('gradeTabs');
+  el.innerHTML = GROUPS.map(function(g){
+    return '<button class="grade-tab'+(g.id===activeGroup.id?' active':'')+'" data-gid="'+g.id+'">'+g.label+'</button>';
   }).join('');
-  el.querySelectorAll('.cart-tab').forEach(function(b) {
-    b.addEventListener('click', function() {
-      activeCart = b.dataset.cart; renderTabs(); loadAndRender();
+  el.querySelectorAll('.grade-tab').forEach(function(b){
+    b.addEventListener('click', function(){
+      activeGroup = GROUPS.find(function(g){ return g.id===b.dataset.gid; });
+      renderTabs(); loadAndRender();
     });
   });
 }
 
-// ---------- load ----------
+// ── Load ─────────────────────────────────────────────────
 async function loadAndRender() {
   var dates    = weekDates(weekOffset);
   var dateStrs = dates.map(fmtDate);
   document.getElementById('weekLabel').textContent =
     fmtShort(dates[0]) + ' \u2013 ' + fmtShort(dates[4]) + ', ' + dates[0].getFullYear();
-  document.getElementById('gridWrapper').innerHTML =
-    '<div class="loading-overlay">Loading&hellip;</div>';
+  document.getElementById('tableBody').innerHTML =
+    '<tr class="loading-row"><td colspan="11">Loading\u2026</td></tr>';
+
+  var res = await db
+    .from('cart_reservations')
+    .select('id,cart_name,reservation_date,period_id,reserved_by')
+    .in('cart_name', activeGroup.carts)
+    .in('reservation_date', dateStrs);
 
   reservations = {};
-  if (db) {
-    var res = await db
-      .from('cart_reservations')
-      .select('id,reservation_date,period_id,reserved_by')
-      .eq('cart_name', activeCart)
-      .in('reservation_date', dateStrs);
-    (res.data || []).forEach(function(r) {
-      reservations[r.reservation_date + '_' + r.period_id] = { id: r.id, reserved_by: r.reserved_by };
-    });
-  }
-  renderGrid(dates);
+  (res.data||[]).forEach(function(r){
+    reservations[r.cart_name+'_'+r.reservation_date+'_'+r.period_id] = { id: r.id, reserved_by: r.reserved_by };
+  });
+  renderTable(dates);
 }
 
-// ---------- grid ----------
-function renderGrid(dates) {
-  var w = document.getElementById('gridWrapper');
-  var headerCells = '<div class="grid-header-cell">Period</div>' +
-    DAYS.map(function(day,i) {
-      var today = isToday(dates[i]) ? ' day-today' : '';
-      return '<div class="grid-header-cell'+today+'">'+day+
-             '<span class="day-date">'+fmtShort(dates[i])+'</span></div>';
-    }).join('');
+// ── Render table ─────────────────────────────────────────
+function renderTable(dates) {
+  var carts = activeGroup.carts;
+  var colCount = 1 + dates.length * carts.length;
 
-  var rows = PERIODS.map(function(p, pi) {
-    var cells = dates.map(function(d) {
-      var key = fmtDate(d) + '_' + p.id;
-      var res = reservations[key];
-      var past = isPast(d, pi);
-      if (past) {
-        return '<div class="slot-cell past"><div class="slot-chip chip-past">'+(res?res.reserved_by:'\u2014')+'</div></div>';
-      } else if (res) {
-        return '<div class="slot-cell has-res" data-date="'+fmtDate(d)+'" data-pid="'+p.id+'" data-action="cancel">' +
-               '<div class="slot-chip chip-reserved">'+res.reserved_by+'</div></div>';
-      } else {
-        return '<div class="slot-cell available" data-date="'+fmtDate(d)+'" data-pid="'+p.id+'" data-action="reserve">' +
-               '<div class="slot-chip chip-available">Available</div></div>';
-      }
-    }).join('');
-    return '<div class="grid-row"><div class="period-cell">' +
-           '<div class="period-name">'+p.label+'</div>' +
-           '<div class="period-time">'+p.time+'</div>' +
-           '</div>'+cells+'</div>';
+  // Header
+  var head = document.getElementById('tableHead');
+  // Row 1: Period + day names (colspan 2 each)
+  var row1 = '<tr><th class="period-header" rowspan="2">Period</th>';
+  dates.forEach(function(d, i){
+    var todayCls = isToday(d) ? ' today-header' : '';
+    row1 += '<th class="day-header'+todayCls+'" colspan="'+carts.length+'">'+DAYS[i]+
+            '<span class="day-date">'+fmtShort(d)+'</span></th>';
+  });
+  row1 += '</tr>';
+  // Row 2: cart labels
+  var row2 = '<tr>';
+  dates.forEach(function(){
+    carts.forEach(function(c, ci){
+      row2 += '<th class="cart-header'+(ci===0?' day-start':'')+'">Cart '+c+'</th>';
+    });
+  });
+  row2 += '</tr>';
+  head.innerHTML = row1 + row2;
+
+  // Body
+  var body = document.getElementById('tableBody');
+  body.innerHTML = PERIODS.map(function(p, pi){
+    var cells = '';
+    dates.forEach(function(d, di){
+      carts.forEach(function(cart, ci){
+        var key  = cart+'_'+fmtDate(d)+'_'+p.id;
+        var res  = reservations[key];
+        var past = isPast(d, pi);
+        var startCls = ci===0 ? ' day-start' : '';
+        if (past) {
+          cells += '<td class="slot-cell past'+startCls+'">' +
+            '<span class="chip chip-past">'+(res?res.reserved_by:'\u2014')+'</span></td>';
+        } else if (res) {
+          cells += '<td class="slot-cell'+startCls+'" data-key="'+key+'" data-action="cancel">' +
+            '<span class="chip chip-reserved">'+res.reserved_by+'</span></td>';
+        } else {
+          cells += '<td class="slot-cell'+startCls+'" data-cart="'+cart+'" data-date="'+fmtDate(d)+'" data-pid="'+p.id+'" data-action="reserve">' +
+            '<span class="chip chip-available">Available</span></td>';
+        }
+      });
+    });
+    return '<tr><td class="period-cell"><div class="period-name">'+p.label+'</div>' +
+           '<div class="period-time">'+p.time+'</div></td>'+cells+'</tr>';
   }).join('');
 
-  w.innerHTML = '<div class="grid-header">'+headerCells+'</div>'+rows;
-
-  w.querySelectorAll('[data-action]').forEach(function(cell) {
-    cell.addEventListener('click', function() {
-      var date   = cell.dataset.date;
-      var pid    = cell.dataset.pid;
-      var action = cell.dataset.action;
-      var per    = PERIODS.find(function(p){ return p.id===pid; });
-      var d      = new Date(date + 'T00:00:00');
-      var day    = DAYS[d.getDay()-1] || '';
-      var key    = date + '_' + pid;
-      if (action === 'reserve') openReserve(date, pid, per, day);
-      else openCancel(date, pid, per, day, reservations[key]);
+  // Bind clicks
+  body.querySelectorAll('[data-action]').forEach(function(cell){
+    cell.addEventListener('click', function(){
+      var per = PERIODS.find(function(p){ return p.id===cell.dataset.pid; });
+      if (cell.dataset.action === 'reserve') {
+        var d = new Date(cell.dataset.date+'T00:00:00');
+        openReserve(cell.dataset.cart, cell.dataset.date, cell.dataset.pid, per, DAYS[d.getDay()-1]||'');
+      } else {
+        var parts = cell.dataset.key.split('_');
+        var cart=parts[0], date=parts[1], pid=parts[2];
+        per = PERIODS.find(function(p){ return p.id===pid; });
+        var d2 = new Date(date+'T00:00:00');
+        openCancel(cart, date, pid, per, DAYS[d2.getDay()-1]||'', reservations[cell.dataset.key]);
+      }
     });
   });
 }
 
-// ---------- reserve ----------
-function openReserve(date, pid, per, day) {
-  pending = { date: date, pid: pid };
-  document.getElementById('rCartLabel').textContent  = 'Cart ' + activeCart;
-  document.getElementById('rDayPeriod').textContent  = day + ' \u00b7 ' + per.label;
-  document.getElementById('rTime').textContent       = per.time;
-  document.getElementById('nameInput').value         = '';
-  document.getElementById('rConfirmBtn').disabled    = false;
-  document.getElementById('rConfirmBtn').textContent = 'Reserve';
+// ── Reserve modal ─────────────────────────────────────────
+function openReserve(cart, date, pid, per, day) {
+  pending = { cart:cart, date:date, pid:pid };
+  document.getElementById('rEyebrow').textContent = 'Cart ' + cart;
+  document.getElementById('rTitle').textContent   = day + ' \u00b7 ' + per.label;
+  document.getElementById('rSub').textContent     = per.time;
+  document.getElementById('nameInput').value      = '';
+  var btn = document.getElementById('rConfirmBtn');
+  btn.disabled = false; btn.textContent = 'Reserve';
   document.getElementById('reserveModal').classList.add('active');
   setTimeout(function(){ document.getElementById('nameInput').focus(); }, 150);
 }
@@ -427,71 +417,57 @@ function openReserve(date, pid, per, day) {
 async function doReserve() {
   var name = document.getElementById('nameInput').value.trim();
   if (!name) { document.getElementById('nameInput').focus(); return; }
-  if (!db)   { showToast('No database connected', 'error'); return; }
   var btn = document.getElementById('rConfirmBtn');
   btn.disabled = true; btn.textContent = 'Saving\u2026';
   var per = PERIODS.find(function(p){ return p.id===pending.pid; });
   var result = await db.from('cart_reservations').insert({
-    cart_name:        activeCart,
-    reservation_date: pending.date,
-    period_id:        pending.pid,
-    period_label:     per.label,
-    period_time:      per.time,
-    reserved_by:      name,
+    cart_name: pending.cart, reservation_date: pending.date,
+    period_id: pending.pid, period_label: per.label,
+    period_time: per.time, reserved_by: name,
   });
   btn.disabled = false; btn.textContent = 'Reserve';
   if (result.error) {
-    showToast(result.error.code === '23505'
-      ? 'That slot was just taken \u2014 try another!'
-      : 'Error: ' + result.error.message, 'error');
+    showToast(result.error.code==='23505'
+      ? 'That slot was just taken \u2014 try another!' : 'Error: '+result.error.message, 'error');
   } else {
     showToast('Reserved for ' + name + ' \u2713');
-    closeModals();
-    await loadAndRender();
+    closeModals(); await loadAndRender();
   }
 }
 
-// ---------- cancel ----------
-function openCancel(date, pid, per, day, res) {
-  pending = { date: date, pid: pid, resId: res.id };
-  document.getElementById('cCartLabel').textContent  = 'Cart ' + activeCart;
-  document.getElementById('cDayPeriod').textContent  = day + ' \u00b7 ' + per.label;
-  document.getElementById('cTime').textContent       = per.time;
-  document.getElementById('cReservedBy').textContent = res.reserved_by;
-  document.getElementById('cCancelBtn').disabled     = false;
-  document.getElementById('cCancelBtn').textContent  = 'Cancel reservation';
+// ── Cancel modal ──────────────────────────────────────────
+function openCancel(cart, date, pid, per, day, res) {
+  pending = { resId: res.id };
+  document.getElementById('cEyebrow').textContent = 'Cart ' + cart;
+  document.getElementById('cTitle').textContent   = day + ' \u00b7 ' + per.label;
+  document.getElementById('cSub').textContent     = per.time;
+  document.getElementById('cName').textContent    = res.reserved_by;
+  var btn = document.getElementById('cCancelBtn');
+  btn.disabled = false; btn.textContent = 'Cancel reservation';
   document.getElementById('cancelModal').classList.add('active');
 }
 
 async function doCancel() {
-  if (!db) return;
   var btn = document.getElementById('cCancelBtn');
   btn.disabled = true; btn.textContent = 'Removing\u2026';
   var result = await db.from('cart_reservations').delete().eq('id', pending.resId);
   btn.disabled = false; btn.textContent = 'Cancel reservation';
-  if (result.error) {
-    showToast('Error: ' + result.error.message, 'error');
-  } else {
-    showToast('Reservation cancelled');
-    closeModals();
-    await loadAndRender();
-  }
+  if (result.error) { showToast('Error: '+result.error.message, 'error'); }
+  else { showToast('Reservation cancelled'); closeModals(); await loadAndRender(); }
 }
 
-// ---------- shared ----------
+// ── Shared ────────────────────────────────────────────────
 function closeModals() {
   document.getElementById('reserveModal').classList.remove('active');
   document.getElementById('cancelModal').classList.remove('active');
   pending = null;
 }
-
 function showToast(msg, type) {
   var t = document.getElementById('toast');
   t.textContent = msg;
-  t.className = 'toast show' + (type === 'error' ? ' error' : '');
+  t.className = 'toast show' + (type==='error' ? ' error' : '');
   setTimeout(function(){ t.classList.remove('show'); }, 3200);
 }
-
 function bindEvents() {
   document.getElementById('prevWeek').addEventListener('click', function(){ weekOffset--; loadAndRender(); });
   document.getElementById('nextWeek').addEventListener('click', function(){ weekOffset++; loadAndRender(); });
@@ -500,13 +476,9 @@ function bindEvents() {
   document.getElementById('rConfirmBtn').addEventListener('click', doReserve);
   document.getElementById('cKeepBtn').addEventListener('click', closeModals);
   document.getElementById('cCancelBtn').addEventListener('click', doCancel);
-  document.getElementById('nameInput').addEventListener('keydown', function(e){
-    if (e.key === 'Enter') doReserve();
-  });
-  ['reserveModal','cancelModal'].forEach(function(id) {
-    document.getElementById(id).addEventListener('click', function(e){
-      if (e.target === e.currentTarget) closeModals();
-    });
+  document.getElementById('nameInput').addEventListener('keydown', function(e){ if(e.key==='Enter') doReserve(); });
+  ['reserveModal','cancelModal'].forEach(function(id){
+    document.getElementById(id).addEventListener('click', function(e){ if(e.target===e.currentTarget) closeModals(); });
   });
 }
 
