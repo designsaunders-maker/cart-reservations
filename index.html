@@ -399,7 +399,9 @@ function isPast(d, pIdx) {
     var parts = PERIODS[pIdx].time.split('\u2013');
     if (parts[1]) {
       var hm = parts[1].trim().split(':').map(Number);
-      var pe = new Date(); pe.setHours(hm[0], hm[1], 0, 0);
+      // Times are in 12-hour format without AM/PM — hours < 8 must be PM
+      var hr = hm[0] < 8 ? hm[0] + 12 : hm[0];
+      var pe = new Date(); pe.setHours(hr, hm[1], 0, 0);
       if (now > pe) return true;
     }
   }
