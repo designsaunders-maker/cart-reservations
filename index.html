@@ -438,6 +438,16 @@ async function loadAndRender() {
     '<tr><td colspan="11" style="text-align:center;padding:50px;color:var(--text-muted);font-family:var(--mono);font-size:.82rem">Loading\u2026</td></tr>';
   document.getElementById('errBanner').style.display = 'none';
 
+  // Auto-select today when on current week
+  var _today = new Date(); _today.setHours(0,0,0,0);
+  var _isCurrentWeek = dates.some(function(d){ return d.getTime()===_today.getTime(); });
+  if (_isCurrentWeek) {
+    var _ti = dates.findIndex(function(d){ return d.getTime()===_today.getTime(); });
+    if (_ti >= 0) activeDayIdx = _ti;
+  } else if (weekOffset !== 0) {
+    activeDayIdx = 0; // Default to Monday on other weeks
+  }
+
   reservations = {};
   try {
     var res = await db
@@ -515,13 +525,6 @@ function renderDesktop(dates) {
 
 // ── Mobile day picker ─────────────────────────────────────
 function renderDayPicker(dates) {
-  var today = new Date(); today.setHours(0,0,0,0);
-  var isCurrentWeek = dates.some(function(d){ return d.getTime()===today.getTime(); });
-  if (isCurrentWeek) {
-    var ti = dates.findIndex(function(d){ return d.getTime()===today.getTime(); });
-    if (ti >= 0) activeDayIdx = ti;
-  }
-
   var dp = document.getElementById('dayPicker');
   dp.innerHTML = DAY_SHORT.map(function(s, i){
     var d = dates[i];
