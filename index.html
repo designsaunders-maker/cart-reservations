@@ -12,14 +12,9 @@
       --bg: #F5F4EF;
       --header-bg: #123731;
       --header-text: #E8EDE9;
-      --primary: #4E6D41;
-      --primary-hover: #3A5330;
       --reserved-text: #7A4010;
       --reserved-bg: #FDF0E6;
       --reserved-border: #E8A97A;
-      --available-text: #2E5E3A;
-      --available-bg: #EDF4EF;
-      --available-border: #A8CCAF;
       --surface: #FFFFFF;
       --text: #1C1C1C;
       --text-muted: #6B7280;
@@ -27,42 +22,44 @@
       --sans: 'DM Sans', sans-serif;
       --display: 'Playfair Display', serif;
       --mono: 'DM Mono', monospace;
-      /* grade theme — overridden per body class */
-      --gt-tab:    #4E6D41;
-      --gt-h1:     #4E6D41;
-      --gt-h2:     #5E8050;
-      --gt-avail-text:   #3A5530;
-      --gt-avail-bg:     #EDF4EF;
-      --gt-avail-border: #9DC88D;
-      --gt-avail-hover:  #C8E4BF;
-      --gt-btn:    #4E6D41;
-      --gt-btn-hov:#3A5330;
-    }
-    body.grade-5th {
-      --gt-tab:    #4E6D41;
-      --gt-h1:     #4E6D41;
-      --gt-h2:     #5E8050;
+      /* grade theme tokens — swapped per body class */
+      --gt-tab:          #4E6D41;
+      --gt-h1:           #4E6D41;
+      --gt-h2:           #5E8050;
       --gt-avail-text:   #3A5530;
       --gt-avail-bg:     #EEF6E9;
       --gt-avail-border: #9DC88D;
       --gt-avail-hover:  #C8E4BF;
-      --gt-btn:    #4E6D41;
-      --gt-btn-hov:#3A5330;
+      --gt-btn:          #4E6D41;
+      --gt-btn-hov:      #3A5330;
+    }
+    body.grade-5th {
+      --gt-tab:          #4E6D41;
+      --gt-h1:           #4E6D41;
+      --gt-h2:           #5E8050;
+      --gt-avail-text:   #3A5530;
+      --gt-avail-bg:     #EEF6E9;
+      --gt-avail-border: #9DC88D;
+      --gt-avail-hover:  #C8E4BF;
+      --gt-btn:          #4E6D41;
+      --gt-btn-hov:      #3A5330;
     }
     body.grade-6th {
-      --gt-tab:    #C4901A;
-      --gt-h1:     #C4901A;
-      --gt-h2:     #D4A020;
+      --gt-tab:          #C4901A;
+      --gt-h1:           #C4901A;
+      --gt-h2:           #D4A020;
       --gt-avail-text:   #7A5800;
       --gt-avail-bg:     #FEF9EC;
       --gt-avail-border: #F1B24A;
       --gt-avail-hover:  #FAE3A0;
-      --gt-btn:    #C4901A;
-      --gt-btn-hov:#A07010;
+      --gt-btn:          #C4901A;
+      --gt-btn-hov:      #A07010;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); font-family: var(--sans); color: var(--text); min-height: 100vh; }
 
+    /* ── Header ── */
     header {
       background: var(--header-bg); color: var(--header-text);
       padding: 18px 32px; display: flex; align-items: center;
@@ -88,23 +85,31 @@
 
     main { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
 
+    /* ── Grade tabs ── */
     .grade-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid var(--border); }
     .grade-tab {
       font-family: var(--sans); font-size: 0.9rem; font-weight: 500;
       padding: 10px 24px; border: none; background: none; color: var(--text-muted);
       cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .15s;
     }
-    .grade-tab:hover { color: var(--gt-tab); }
+    .grade-tab:hover  { color: var(--gt-tab); }
     .grade-tab.active { color: var(--gt-tab); border-bottom-color: var(--gt-tab); font-weight: 600; }
 
+    /* ── Error banner ── */
+    .err-banner {
+      background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px;
+      padding: 12px 16px; margin-bottom: 16px; font-size: 0.84rem; color: #991B1B; display: none;
+    }
+
+    /* ═══════════════════════════════════════════
+       DESKTOP TABLE (hidden on mobile)
+    ═══════════════════════════════════════════ */
     .table-wrapper {
       background: var(--surface); border-radius: 10px; border: 1px solid var(--border);
       overflow: auto; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-
     table { width: 100%; border-collapse: collapse; min-width: 700px; }
 
-    /* Header rows */
     thead tr:first-child th { background: var(--gt-h1); }
     thead tr:last-child  th { background: var(--gt-h2); }
 
@@ -114,15 +119,14 @@
       text-align: center; white-space: nowrap;
     }
     th.period-header { text-align: left; padding-left: 14px; width: 108px; }
-    th.day-header { border-left: 1px solid rgba(255,255,255,0.15); }
-    th.today-header { color: #A8F0C6; }
-    .day-date { display: block; font-size: 0.65rem; font-weight: 400; opacity: 0.75; font-family: var(--mono); margin-top: 1px; }
-    th.cart-header { font-size: 0.68rem; border-left: 1px solid rgba(255,255,255,0.1); }
-    th.cart-header:nth-child(odd) { border-left: 1px solid rgba(255,255,255,0.2); }
+    th.day-header    { border-left: 1px solid rgba(255,255,255,0.15); }
+    th.today-header  { color: #A8F0C6; }
+    .day-date        { display: block; font-size: 0.65rem; font-weight: 400; opacity: 0.75; font-family: var(--mono); margin-top: 1px; }
+    th.cart-header   { font-size: 0.68rem; border-left: 1px solid rgba(255,255,255,0.1); }
+    th.cart-header.day-start { border-left: 1px solid rgba(255,255,255,0.25); }
 
-    /* Body rows */
-    tbody tr { border-top: 1px solid var(--border); }
-    tbody tr:hover { background: #FAFAF8; }
+    tbody tr         { border-top: 1px solid var(--border); }
+    tbody tr:hover   { background: #FAFAF8; }
 
     td.period-cell {
       padding: 8px 8px 8px 14px; border-right: 1px solid var(--border);
@@ -133,31 +137,92 @@
 
     td.slot-cell {
       padding: 4px; text-align: center; vertical-align: middle;
-      min-width: 80px; height: 52px;
-      border-left: 1px solid var(--border);
-      transition: background .1s;
+      min-width: 82px; height: 52px; border-left: 1px solid var(--border); transition: background .1s;
     }
     td.slot-cell.day-start { border-left: 2px solid var(--border); }
-    td.slot-cell.past { background: #FAFAF8; }
+    td.slot-cell.past      { background: #FAFAF8; }
 
+    /* ── Chips (shared desktop + mobile) ── */
     .chip {
       display: inline-block; width: calc(100% - 4px); border-radius: 5px;
-      padding: 5px 5px; font-size: 0.69rem; font-weight: 500;
+      padding: 5px; font-size: 0.69rem; font-weight: 500;
       text-align: center; line-height: 1.3; transition: all .1s;
     }
     .chip-available {
       color: var(--gt-avail-text); background: var(--gt-avail-bg);
       border: 1px solid var(--gt-avail-border); cursor: pointer;
     }
-    td.slot-cell:not(.past):hover .chip-available { background: var(--gt-avail-hover); border-color: var(--gt-tab); }
+    td.slot-cell:not(.past):hover .chip-available,
+    .m-slot:hover .chip-available {
+      background: var(--gt-avail-hover); border-color: var(--gt-tab);
+    }
     .chip-reserved {
       color: var(--reserved-text); background: var(--reserved-bg);
       border: 1px solid var(--reserved-border); cursor: pointer;
     }
-    td.slot-cell:not(.past):hover .chip-reserved { background: #FAE0C5; }
-    .chip-past { color: #C0BDB5; background: #F4F3F0; border: 1px solid #E6E4DF; font-style: italic; font-size: 0.65rem; }
+    td.slot-cell:not(.past):hover .chip-reserved,
+    .m-slot:hover .chip-reserved { background: #FAE0C5; }
+    .chip-past { color: #B8B4AC; background: #F4F3F0; border: 1px solid #E6E4DF; font-style: italic; font-size: 0.65rem; }
 
-    /* Modals */
+    /* ═══════════════════════════════════════════
+       MOBILE (day-picker + single-day grid)
+    ═══════════════════════════════════════════ */
+    .day-picker {
+      display: none; gap: 6px; margin-bottom: 12px;
+      overflow-x: auto; padding-bottom: 4px;
+    }
+    .day-btn {
+      flex-shrink: 0; font-family: var(--sans); font-size: 0.78rem; font-weight: 500;
+      padding: 8px 0; border-radius: 8px; border: 1.5px solid var(--border);
+      background: white; color: var(--text-muted); cursor: pointer; transition: all .15s;
+      text-align: center; width: 58px;
+    }
+    .day-btn .ds { display: block; font-weight: 600; color: var(--text); font-size: 0.82rem; }
+    .day-btn .dn { display: block; font-size: 0.64rem; margin-top: 2px; font-family: var(--mono); }
+    .day-btn.today-day  { border-color: var(--gt-tab); }
+    .day-btn.active     { background: var(--gt-tab); border-color: var(--gt-tab); color: white; }
+    .day-btn.active .ds { color: white; }
+
+    .mobile-table-wrap {
+      display: none;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .m-header {
+      display: grid; grid-template-columns: 84px 1fr 1fr;
+      background: var(--gt-h1);
+    }
+    .m-header-cell {
+      color: rgba(255,255,255,0.92); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase; padding: 10px 6px; text-align: center;
+    }
+    .m-header-cell:first-child { text-align: left; padding-left: 14px; }
+    .m-row {
+      display: grid; grid-template-columns: 84px 1fr 1fr;
+      border-top: 1px solid var(--border);
+    }
+    .m-period {
+      padding: 8px 4px 8px 14px; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .m-slot {
+      padding: 5px 4px; display: flex; align-items: center; justify-content: center;
+      border-left: 1px solid var(--border); min-height: 54px;
+    }
+    .m-slot .chip { font-size: 0.72rem; width: calc(100% - 4px); }
+
+    /* ── Breakpoints ── */
+    @media (max-width: 720px) {
+      header  { flex-direction: column; align-items: flex-start; padding: 14px 16px; gap: 10px; }
+      .week-nav { width: 100%; justify-content: space-between; }
+      .week-label { min-width: 0; flex: 1; text-align: center; }
+      main    { padding: 14px 10px; }
+      .table-wrapper     { display: none; }
+      .day-picker        { display: flex; }
+      .mobile-table-wrap { display: block; }
+    }
+
+    /* ── Modals ── */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.4);
       display: flex; align-items: center; justify-content: center;
@@ -171,9 +236,12 @@
       transform: translateY(10px); transition: transform .2s;
     }
     .modal-overlay.active .modal { transform: translateY(0); }
-    .modal-eyebrow { font-family: var(--mono); font-size: 0.68rem; color: var(--gt-tab); font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 4px; }
-    .modal-title   { font-family: var(--display); font-size: 1.25rem; font-weight: 600; }
-    .modal-sub     { font-family: var(--mono); font-size: 0.74rem; color: var(--text-muted); margin: 4px 0 20px; }
+    .modal-eyebrow {
+      font-family: var(--mono); font-size: 0.68rem; color: var(--gt-tab);
+      font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 4px;
+    }
+    .modal-title { font-family: var(--display); font-size: 1.25rem; font-weight: 600; }
+    .modal-sub   { font-family: var(--mono); font-size: 0.74rem; color: var(--text-muted); margin: 4px 0 20px; }
     .modal-input {
       width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 7px;
       font-family: var(--sans); font-size: 0.9rem; color: var(--text); background: var(--bg);
@@ -181,21 +249,24 @@
     }
     .modal-input:focus { border-color: var(--gt-tab); background: white; }
     .modal-actions { display: flex; gap: 8px; }
-    .btn { flex: 1; padding: 10px 14px; border-radius: 7px; font-family: var(--sans); font-size: 0.87rem; font-weight: 500; cursor: pointer; border: none; transition: all .15s; }
-    .btn-secondary  { background: var(--bg); color: var(--text-muted); border: 1.5px solid var(--border); }
+    .btn {
+      flex: 1; padding: 10px 14px; border-radius: 7px; font-family: var(--sans);
+      font-size: 0.87rem; font-weight: 500; cursor: pointer; border: none; transition: all .15s;
+    }
+    .btn-secondary { background: var(--bg); color: var(--text-muted); border: 1.5px solid var(--border); }
     .btn-secondary:hover { background: var(--border); }
-    .btn-primary    { background: var(--gt-btn); color: white; }
+    .btn-primary   { background: var(--gt-btn); color: white; }
     .btn-primary:hover { background: var(--gt-btn-hov); }
     .btn-primary:disabled, .btn-danger:disabled { opacity: .5; cursor: default; }
-    .btn-danger     { background: #DC2626; color: white; }
+    .btn-danger    { background: #DC2626; color: white; }
     .btn-danger:hover { background: #B91C1C; }
-
     .cancel-info {
       background: var(--reserved-bg); border: 1px solid var(--reserved-border);
       border-radius: 7px; padding: 11px 14px; margin-bottom: 16px; font-size: 0.85rem;
     }
     .cancel-name { font-weight: 600; color: #B45309; }
 
+    /* ── Toast ── */
     .toast {
       position: fixed; bottom: 22px; right: 22px; padding: 11px 18px;
       border-radius: 8px; font-size: 0.84rem; font-weight: 500; z-index: 200;
@@ -205,75 +276,9 @@
     }
     .toast.show  { opacity: 1; transform: translateY(0); }
     .toast.error { background: #DC2626; }
-
-    .loading-row td { text-align: center; padding: 50px; color: var(--text-muted); font-family: var(--mono); font-size: 0.82rem; }
-
-    /* ── Mobile: day-picker layout ──────────────────────── */
-    @media (max-width: 720px) {
-      header { flex-direction: column; align-items: flex-start; padding: 14px 16px; gap: 10px; }
-      .week-nav { width: 100%; justify-content: space-between; }
-      .week-label { min-width: 0; flex: 1; text-align: center; }
-      main { padding: 12px 10px; }
-
-      /* Hide full desktop table */
-      .table-wrapper { display: none; }
-
-      /* Day picker */
-      .day-picker { display: flex; gap: 4px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 2px; }
-      .day-btn {
-        flex-shrink: 0; font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
-        padding: 7px 12px; border-radius: 6px; border: 1.5px solid var(--border);
-        background: white; color: var(--text-muted); cursor: pointer; transition: all .15s;
-        text-align: center; min-width: 60px;
-      }
-      .day-btn .day-short { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text); }
-      .day-btn .day-num   { display: block; font-size: 0.66rem; margin-top: 1px; }
-      .day-btn.active     { background: var(--gt-tab); border-color: var(--gt-tab); color: white; }
-      .day-btn.active .day-short { color: white; }
-      .day-btn.today-day  { border-color: var(--gt-tab); }
-
-      /* Mobile slot grid */
-      .mobile-grid { display: block; }
-      .mobile-cart-headers {
-        display: grid; grid-template-columns: 80px 1fr 1fr;
-        background: var(--gt-h1); border-radius: 8px 8px 0 0; overflow: hidden;
-      }
-      .mch-cell {
-        color: rgba(255,255,255,0.92); font-size: 0.72rem; font-weight: 600;
-        letter-spacing: 0.05em; text-transform: uppercase; padding: 9px 6px;
-        text-align: center;
-      }
-      .mch-cell:first-child { text-align: left; padding-left: 12px; }
-      .mobile-row {
-        display: grid; grid-template-columns: 80px 1fr 1fr;
-        border-top: 1px solid var(--border); background: white;
-      }
-      .mobile-row:last-child { border-radius: 0 0 8px 8px; }
-      .m-period {
-        padding: 8px 4px 8px 12px; border-right: 1px solid var(--border);
-        display: flex; flex-direction: column; justify-content: center;
-      }
-      .m-period .period-name { font-size: 0.73rem; font-weight: 500; }
-      .m-period .period-time { font-family: var(--mono); font-size: 0.61rem; color: var(--text-muted); margin-top: 1px; }
-      .m-slot {
-        padding: 5px 4px; display: flex; align-items: center; justify-content: center;
-        border-left: 1px solid var(--border); min-height: 52px;
-      }
-      .m-slot .chip { width: calc(100% - 2px); font-size: 0.68rem; }
-      .mobile-wrapper {
-        background: white; border: 1px solid var(--border);
-        border-radius: 10px; overflow: hidden;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-      }
-    }
-
-    /* Hide mobile elements on desktop */
-    @media (min-width: 721px) {
-      .day-picker, .mobile-grid, .mobile-wrapper { display: none; }
-    }
   </style>
 </head>
-<body>
+<body class="grade-5th">
 
 <header>
   <div>
@@ -290,17 +295,22 @@
 
 <main>
   <div class="grade-tabs" id="gradeTabs"></div>
+  <div class="err-banner" id="errBanner"></div>
 
-  <!-- Mobile: day picker + single-day grid -->
+  <!-- Mobile day picker -->
   <div class="day-picker" id="dayPicker"></div>
-  <div class="mobile-wrapper">
-    <div class="mobile-grid" id="mobileGrid"></div>
+  <div class="mobile-table-wrap">
+    <div class="m-header" id="mHeader"></div>
+    <div id="mBody"></div>
   </div>
 
+  <!-- Desktop table -->
   <div class="table-wrapper">
-    <table id="cartTable">
+    <table>
       <thead id="tableHead"></thead>
-      <tbody id="tableBody"><tr class="loading-row"><td colspan="11">Loading&hellip;</td></tr></tbody>
+      <tbody id="tableBody">
+        <tr><td colspan="11" style="text-align:center;padding:50px;color:var(--text-muted);font-family:var(--mono);font-size:.82rem">Loading&hellip;</td></tr>
+      </tbody>
     </table>
   </div>
 </main>
@@ -336,16 +346,16 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Config ──────────────────────────────────────────────
-const SUPABASE_URL = 'https://wouagdrnrcycqoxzgdnk.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvdWFnZHJucmN5Y3FveHpnZG5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTI5NTcsImV4cCI6MjA4ODEyODk1N30.cVdi4s5HcwzNmuYfB15jA8JdJfyvQBX5JYfcKbs9Mjk';
+// ── Config ────────────────────────────────────────────────
+var SUPABASE_URL = 'https://wouagdrnrcycqoxzgdnk.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvdWFnZHJucmN5Y3FveHpnZG5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTI5NTcsImV4cCI6MjA4ODEyODk1N30.cVdi4s5HcwzNmuYfB15jA8JdJfyvQBX5JYfcKbs9Mjk';
 
-const GROUPS = [
+var GROUPS = [
   { id: '5th', label: '5th Grade', carts: ['5-1', '5-2'] },
   { id: '6th', label: '6th Grade', carts: ['6-1', '6-2'] },
 ];
 
-const PERIODS = [
+var PERIODS = [
   { id: 'p1', label: 'Period 1', time: '8:30\u20139:20'   },
   { id: 'p2', label: 'Period 2', time: '9:20\u201310:10'  },
   { id: 'p3', label: 'Period 3', time: '10:30\u201311:20' },
@@ -354,24 +364,18 @@ const PERIODS = [
   { id: 'p6', label: 'Period 6', time: '1:40\u20132:30'   },
 ];
 
-const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+var DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+var DAY_SHORT = ['Mon','Tue','Wed','Thu','Fri'];
 
-// ── State ────────────────────────────────────────────────
-var db          = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-var activeGroup = GROUPS[0];
-var weekOffset  = 0;
-var reservations = {};  // key: `${cart}_${date}_${pid}` → { id, reserved_by }
-var pending     = null;
+// ── State ─────────────────────────────────────────────────
+var db           = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+var activeGroup  = GROUPS[0];
+var weekOffset   = 0;
+var reservations = {};
+var pending      = null;
+var activeDayIdx = 0;
 
-// ── Boot ─────────────────────────────────────────────────
-function init() {
-  document.body.className = 'grade-' + activeGroup.id;
-  renderTabs();
-  bindEvents();
-  loadAndRender();
-}
-
-// ── Week helpers ─────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────
 function getMondayOf(offset) {
   var d = new Date(); d.setHours(0,0,0,0);
   var day = d.getDay();
@@ -384,18 +388,28 @@ function weekDates(offset) {
 }
 function fmtDate(d)  { return d.toISOString().split('T')[0]; }
 function fmtShort(d) { return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
-function isToday(d)  { var t=new Date(); return d.getFullYear()===t.getFullYear()&&d.getMonth()===t.getMonth()&&d.getDate()===t.getDate(); }
+function isToday(d)  {
+  var t=new Date();
+  return d.getFullYear()===t.getFullYear() && d.getMonth()===t.getMonth() && d.getDate()===t.getDate();
+}
 function isPast(d, pIdx) {
   var now=new Date(), t=new Date(); t.setHours(0,0,0,0);
-  if (d < t) return true;
+  if (d.getTime() < t.getTime()) return true;
   if (isToday(d)) {
-    var end = PERIODS[pIdx].time.split('\u2013')[1];
-    if (end) { var hm=end.trim().split(':').map(Number); var pe=new Date(); pe.setHours(hm[0],hm[1],0,0); if(now>pe) return true; }
+    var parts = PERIODS[pIdx].time.split('\u2013');
+    if (parts[1]) {
+      var hm = parts[1].trim().split(':').map(Number);
+      var pe = new Date(); pe.setHours(hm[0], hm[1], 0, 0);
+      if (now > pe) return true;
+    }
   }
   return false;
 }
+// Build key from cart + date + pid (cart names have hyphens, not underscores, so split is safe)
+function mkKey(cart, date, pid) { return cart + '||' + date + '||' + pid; }
+function parseKey(key) { var p=key.split('||'); return {cart:p[0],date:p[1],pid:p[2]}; }
 
-// ── Tabs ─────────────────────────────────────────────────
+// ── Grade tabs ────────────────────────────────────────────
 function renderTabs() {
   var el = document.getElementById('gradeTabs');
   el.innerHTML = GROUPS.map(function(g){
@@ -405,136 +419,203 @@ function renderTabs() {
     b.addEventListener('click', function(){
       activeGroup = GROUPS.find(function(g){ return g.id===b.dataset.gid; });
       document.body.className = 'grade-' + activeGroup.id;
-      renderTabs(); loadAndRender();
+      renderTabs();
+      loadAndRender();
     });
   });
 }
 
-// ── Load ─────────────────────────────────────────────────
+// ── Load from Supabase ────────────────────────────────────
 async function loadAndRender() {
   var dates    = weekDates(weekOffset);
   var dateStrs = dates.map(fmtDate);
+
   document.getElementById('weekLabel').textContent =
     fmtShort(dates[0]) + ' \u2013 ' + fmtShort(dates[4]) + ', ' + dates[0].getFullYear();
-  document.getElementById('tableBody').innerHTML =
-    '<tr class="loading-row"><td colspan="11">Loading\u2026</td></tr>';
 
-  var res = await db
-    .from('cart_reservations')
-    .select('id,cart_name,reservation_date,period_id,reserved_by')
-    .in('cart_name', activeGroup.carts)
-    .in('reservation_date', dateStrs);
+  // Loading state
+  document.getElementById('tableBody').innerHTML =
+    '<tr><td colspan="11" style="text-align:center;padding:50px;color:var(--text-muted);font-family:var(--mono);font-size:.82rem">Loading\u2026</td></tr>';
+  document.getElementById('errBanner').style.display = 'none';
 
   reservations = {};
-  (res.data||[]).forEach(function(r){
-    reservations[r.cart_name+'_'+r.reservation_date+'_'+r.period_id] = { id: r.id, reserved_by: r.reserved_by };
-  });
-  renderTable(dates);
+  try {
+    var res = await db
+      .from('cart_reservations')
+      .select('id,cart_name,reservation_date,period_id,reserved_by')
+      .in('cart_name', activeGroup.carts)
+      .in('reservation_date', dateStrs);
+
+    if (res.error) {
+      document.getElementById('errBanner').textContent =
+        'Database not connected yet \u2014 run supabase-setup.sql to enable reservations. (' + res.error.message + ')';
+      document.getElementById('errBanner').style.display = 'block';
+    } else {
+      (res.data || []).forEach(function(r){
+        reservations[mkKey(r.cart_name, r.reservation_date, r.period_id)] = { id: r.id, reserved_by: r.reserved_by };
+      });
+    }
+  } catch(e) {
+    document.getElementById('errBanner').textContent = 'Could not connect to database: ' + e.message;
+    document.getElementById('errBanner').style.display = 'block';
+  }
+
+  renderDesktop(dates);
   renderDayPicker(dates);
-  renderMobileGrid(dates);
+  renderMobile(dates);
 }
 
-// ── Render table ─────────────────────────────────────────
-function renderTable(dates) {
+// ── Desktop table ─────────────────────────────────────────
+function renderDesktop(dates) {
   var carts = activeGroup.carts;
-  var colCount = 1 + dates.length * carts.length;
 
-  // Header
-  var head = document.getElementById('tableHead');
-  // Row 1: Period + day names (colspan 2 each)
-  var row1 = '<tr><th class="period-header" rowspan="2">Period</th>';
+  // Header row 1: day names
+  var r1 = '<tr><th class="period-header" rowspan="2">Period</th>';
   dates.forEach(function(d, i){
-    var todayCls = isToday(d) ? ' today-header' : '';
-    row1 += '<th class="day-header'+todayCls+'" colspan="'+carts.length+'">'+DAYS[i]+
-            '<span class="day-date">'+fmtShort(d)+'</span></th>';
+    var cls = isToday(d) ? ' today-header' : '';
+    r1 += '<th class="day-header'+cls+'" colspan="'+carts.length+'">'+DAYS[i]+
+          '<span class="day-date">'+fmtShort(d)+'</span></th>';
   });
-  row1 += '</tr>';
-  // Row 2: cart labels
-  var row2 = '<tr>';
+  r1 += '</tr>';
+
+  // Header row 2: cart names
+  var r2 = '<tr>';
   dates.forEach(function(){
     carts.forEach(function(c, ci){
-      row2 += '<th class="cart-header'+(ci===0?' day-start':'')+'">Cart '+c+'</th>';
+      r2 += '<th class="cart-header'+(ci===0?' day-start':'')+'">Cart '+c+'</th>';
     });
   });
-  row2 += '</tr>';
-  head.innerHTML = row1 + row2;
+  r2 += '</tr>';
+  document.getElementById('tableHead').innerHTML = r1 + r2;
 
-  // Body
-  var body = document.getElementById('tableBody');
-  body.innerHTML = PERIODS.map(function(p, pi){
+  // Body rows
+  var tbody = document.getElementById('tableBody');
+  tbody.innerHTML = PERIODS.map(function(p, pi){
     var cells = '';
-    dates.forEach(function(d, di){
+    dates.forEach(function(d){
       carts.forEach(function(cart, ci){
-        var key  = cart+'_'+fmtDate(d)+'_'+p.id;
+        var key  = mkKey(cart, fmtDate(d), p.id);
         var res  = reservations[key];
         var past = isPast(d, pi);
-        var startCls = ci===0 ? ' day-start' : '';
+        var sc   = ci===0 ? ' day-start' : '';
         if (past) {
-          cells += '<td class="slot-cell past'+startCls+'">' +
-            '<span class="chip chip-past">'+(res?res.reserved_by:'\u2014')+'</span></td>';
+          cells += '<td class="slot-cell past'+sc+'"><span class="chip chip-past">'+(res?res.reserved_by:'\u2014')+'</span></td>';
         } else if (res) {
-          cells += '<td class="slot-cell'+startCls+'" data-key="'+key+'" data-action="cancel">' +
-            '<span class="chip chip-reserved">'+res.reserved_by+'</span></td>';
+          cells += '<td class="slot-cell'+sc+'" data-key="'+key+'" data-action="cancel" style="cursor:pointer"><span class="chip chip-reserved">'+res.reserved_by+'</span></td>';
         } else {
-          cells += '<td class="slot-cell'+startCls+'" data-cart="'+cart+'" data-date="'+fmtDate(d)+'" data-pid="'+p.id+'" data-action="reserve">' +
-            '<span class="chip chip-available">Available</span></td>';
+          cells += '<td class="slot-cell'+sc+'" data-cart="'+cart+'" data-date="'+fmtDate(d)+'" data-pid="'+p.id+'" data-action="reserve" style="cursor:pointer"><span class="chip chip-available">Available</span></td>';
         }
       });
     });
-    return '<tr><td class="period-cell"><div class="period-name">'+p.label+'</div>' +
-           '<div class="period-time">'+p.time+'</div></td>'+cells+'</tr>';
+    return '<tr><td class="period-cell"><div class="period-name">'+p.label+'</div><div class="period-time">'+p.time+'</div></td>'+cells+'</tr>';
   }).join('');
 
-  // Bind clicks
-  body.querySelectorAll('[data-action]').forEach(function(cell){
-    cell.addEventListener('click', function(){
-      var per = PERIODS.find(function(p){ return p.id===cell.dataset.pid; });
-      if (cell.dataset.action === 'reserve') {
-        var d = new Date(cell.dataset.date+'T00:00:00');
-        openReserve(cell.dataset.cart, cell.dataset.date, cell.dataset.pid, per, DAYS[d.getDay()-1]||'');
-      } else {
-        var parts = cell.dataset.key.split('_');
-        var cart=parts[0], date=parts[1], pid=parts[2];
-        per = PERIODS.find(function(p){ return p.id===pid; });
-        var d2 = new Date(date+'T00:00:00');
-        openCancel(cart, date, pid, per, DAYS[d2.getDay()-1]||'', reservations[cell.dataset.key]);
-      }
+  tbody.querySelectorAll('[data-action]').forEach(bindSlotClick);
+}
+
+// ── Mobile day picker ─────────────────────────────────────
+function renderDayPicker(dates) {
+  var today = new Date(); today.setHours(0,0,0,0);
+  var isCurrentWeek = dates.some(function(d){ return d.getTime()===today.getTime(); });
+  if (isCurrentWeek) {
+    var ti = dates.findIndex(function(d){ return d.getTime()===today.getTime(); });
+    if (ti >= 0) activeDayIdx = ti;
+  }
+
+  var dp = document.getElementById('dayPicker');
+  dp.innerHTML = DAY_SHORT.map(function(s, i){
+    var d = dates[i];
+    var cls = '';
+    if (i === activeDayIdx) cls += ' active';
+    else if (isToday(d))    cls += ' today-day';
+    return '<button class="day-btn'+cls+'" data-idx="'+i+'">' +
+           '<span class="ds">'+s+'</span><span class="dn">'+fmtShort(d)+'</span></button>';
+  }).join('');
+  dp.querySelectorAll('.day-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      activeDayIdx = parseInt(b.dataset.idx);
+      renderDayPicker(dates);
+      renderMobile(dates);
     });
+  });
+}
+
+// ── Mobile single-day grid ────────────────────────────────
+function renderMobile(dates) {
+  var carts = activeGroup.carts;
+  var d     = dates[activeDayIdx];
+
+  document.getElementById('mHeader').innerHTML =
+    '<div class="m-header-cell">Period</div>' +
+    carts.map(function(c){ return '<div class="m-header-cell">Cart '+c+'</div>'; }).join('');
+
+  document.getElementById('mBody').innerHTML = PERIODS.map(function(p, pi){
+    var slots = carts.map(function(cart){
+      var key  = mkKey(cart, fmtDate(d), p.id);
+      var res  = reservations[key];
+      var past = isPast(d, pi);
+      if (past) {
+        return '<div class="m-slot"><span class="chip chip-past">'+(res?res.reserved_by:'\u2014')+'</span></div>';
+      } else if (res) {
+        return '<div class="m-slot" data-key="'+key+'" data-action="cancel" style="cursor:pointer"><span class="chip chip-reserved">'+res.reserved_by+'</span></div>';
+      } else {
+        return '<div class="m-slot" data-cart="'+cart+'" data-date="'+fmtDate(d)+'" data-pid="'+p.id+'" data-action="reserve" style="cursor:pointer"><span class="chip chip-available">Free</span></div>';
+      }
+    }).join('');
+    return '<div class="m-row"><div class="m-period"><div class="period-name">'+p.label+'</div><div class="period-time">'+p.time+'</div></div>'+slots+'</div>';
+  }).join('');
+
+  document.getElementById('mBody').querySelectorAll('[data-action]').forEach(bindSlotClick);
+}
+
+// ── Shared slot click handler ─────────────────────────────
+function bindSlotClick(cell) {
+  cell.addEventListener('click', function(){
+    if (cell.dataset.action === 'reserve') {
+      var per = PERIODS.find(function(p){ return p.id===cell.dataset.pid; });
+      var d   = new Date(cell.dataset.date+'T00:00:00');
+      openReserve(cell.dataset.cart, cell.dataset.date, cell.dataset.pid, per, DAYS[d.getDay()-1]||'');
+    } else {
+      var k   = parseKey(cell.dataset.key);
+      var per = PERIODS.find(function(p){ return p.id===k.pid; });
+      var d2  = new Date(k.date+'T00:00:00');
+      openCancel(k.cart, k.date, k.pid, per, DAYS[d2.getDay()-1]||'', reservations[cell.dataset.key]);
+    }
   });
 }
 
 // ── Reserve modal ─────────────────────────────────────────
 function openReserve(cart, date, pid, per, day) {
   pending = { cart:cart, date:date, pid:pid };
-  document.getElementById('rEyebrow').textContent = 'Cart ' + cart;
-  document.getElementById('rTitle').textContent   = day + ' \u00b7 ' + per.label;
-  document.getElementById('rSub').textContent     = per.time;
-  document.getElementById('nameInput').value      = '';
+  document.getElementById('rEyebrow').textContent  = 'Cart ' + cart;
+  document.getElementById('rTitle').textContent    = day + ' \u00b7 ' + per.label;
+  document.getElementById('rSub').textContent      = per.time;
+  document.getElementById('nameInput').value       = '';
   var btn = document.getElementById('rConfirmBtn');
   btn.disabled = false; btn.textContent = 'Reserve';
   document.getElementById('reserveModal').classList.add('active');
   setTimeout(function(){ document.getElementById('nameInput').focus(); }, 150);
 }
-
 async function doReserve() {
   var name = document.getElementById('nameInput').value.trim();
   if (!name) { document.getElementById('nameInput').focus(); return; }
   var btn = document.getElementById('rConfirmBtn');
   btn.disabled = true; btn.textContent = 'Saving\u2026';
   var per = PERIODS.find(function(p){ return p.id===pending.pid; });
-  var result = await db.from('cart_reservations').insert({
-    cart_name: pending.cart, reservation_date: pending.date,
-    period_id: pending.pid, period_label: per.label,
-    period_time: per.time, reserved_by: name,
-  });
+  try {
+    var result = await db.from('cart_reservations').insert({
+      cart_name: pending.cart, reservation_date: pending.date,
+      period_id: pending.pid, period_label: per.label,
+      period_time: per.time, reserved_by: name,
+    });
+    if (result.error) {
+      showToast(result.error.code==='23505' ? 'That slot was just taken \u2014 try another!' : 'Error: '+result.error.message, 'error');
+    } else {
+      showToast('Reserved for ' + name + ' \u2713');
+      closeModals(); await loadAndRender();
+    }
+  } catch(e) { showToast('Error: '+e.message, 'error'); }
   btn.disabled = false; btn.textContent = 'Reserve';
-  if (result.error) {
-    showToast(result.error.code==='23505'
-      ? 'That slot was just taken \u2014 try another!' : 'Error: '+result.error.message, 'error');
-  } else {
-    showToast('Reserved for ' + name + ' \u2713');
-    closeModals(); await loadAndRender();
-  }
 }
 
 // ── Cancel modal ──────────────────────────────────────────
@@ -548,17 +629,18 @@ function openCancel(cart, date, pid, per, day, res) {
   btn.disabled = false; btn.textContent = 'Cancel reservation';
   document.getElementById('cancelModal').classList.add('active');
 }
-
 async function doCancel() {
   var btn = document.getElementById('cCancelBtn');
   btn.disabled = true; btn.textContent = 'Removing\u2026';
-  var result = await db.from('cart_reservations').delete().eq('id', pending.resId);
+  try {
+    var result = await db.from('cart_reservations').delete().eq('id', pending.resId);
+    if (result.error) { showToast('Error: '+result.error.message, 'error'); }
+    else { showToast('Reservation cancelled'); closeModals(); await loadAndRender(); }
+  } catch(e) { showToast('Error: '+e.message, 'error'); }
   btn.disabled = false; btn.textContent = 'Cancel reservation';
-  if (result.error) { showToast('Error: '+result.error.message, 'error'); }
-  else { showToast('Reservation cancelled'); closeModals(); await loadAndRender(); }
 }
 
-// ── Shared ────────────────────────────────────────────────
+// ── Utils ─────────────────────────────────────────────────
 function closeModals() {
   document.getElementById('reserveModal').classList.remove('active');
   document.getElementById('cancelModal').classList.remove('active');
@@ -571,12 +653,12 @@ function showToast(msg, type) {
   setTimeout(function(){ t.classList.remove('show'); }, 3200);
 }
 function bindEvents() {
-  document.getElementById('prevWeek').addEventListener('click', function(){ weekOffset--; loadAndRender(); });
-  document.getElementById('nextWeek').addEventListener('click', function(){ weekOffset++; loadAndRender(); });
-  document.getElementById('todayBtn').addEventListener('click', function(){ weekOffset=0; loadAndRender(); });
+  document.getElementById('prevWeek').addEventListener('click',  function(){ weekOffset--; loadAndRender(); });
+  document.getElementById('nextWeek').addEventListener('click',  function(){ weekOffset++; loadAndRender(); });
+  document.getElementById('todayBtn').addEventListener('click',  function(){ weekOffset=0; loadAndRender(); });
   document.getElementById('rCancelBtn').addEventListener('click', closeModals);
   document.getElementById('rConfirmBtn').addEventListener('click', doReserve);
-  document.getElementById('cKeepBtn').addEventListener('click', closeModals);
+  document.getElementById('cKeepBtn').addEventListener('click',   closeModals);
   document.getElementById('cCancelBtn').addEventListener('click', doCancel);
   document.getElementById('nameInput').addEventListener('keydown', function(e){ if(e.key==='Enter') doReserve(); });
   ['reserveModal','cancelModal'].forEach(function(id){
@@ -584,6 +666,13 @@ function bindEvents() {
   });
 }
 
+// ── Boot ──────────────────────────────────────────────────
+function init() {
+  document.body.className = 'grade-' + activeGroup.id;
+  renderTabs();
+  bindEvents();
+  loadAndRender();
+}
 init();
 </script>
 </body>
